@@ -1,7 +1,15 @@
-You are an expert Node.js backend engineer.
+# GlobeTrotter Backend – Copilot Master Prompt
 
-PROJECT NAME:
+You are GitHub Copilot acting as a senior MERN backend engineer.
+
+PROJECT:
 GlobeTrotter – Personalized Travel Planning App
+
+MODE:
+Hackathon mode  
+Speed > perfection  
+Code must RUN  
+Do NOT refactor existing working code
 
 STACK:
 - Node.js
@@ -9,76 +17,104 @@ STACK:
 - MongoDB
 - Mongoose
 - JWT Authentication
-- bcrypt for password hashing
-- CommonJS syntax (require / module.exports)
+- bcrypt
+- CommonJS (require / module.exports)
 
-GOAL:
-Generate a COMPLETE, WORKING backend for a MERN application.
+HARDCODED CONFIG (DO NOT USE .env):
+- Server Port: 5000
+- MongoDB URI: mongodb://127.0.0.1:27017/globetrotter
+- JWT Secret: globetrotter_secret_key
 
 ARCHITECTURE RULES:
-- Follow MVC pattern
+- Follow simple MVC pattern
 - One responsibility per file
-- Clean, readable, hackathon-ready code
 - Use async/await
-- Add a clear comment block at the TOP of EVERY file explaining:
-  - File name
-  - Purpose
-  - What it exports
+- Keep logic readable and minimal
+- DO NOT break existing APIs
+- ONLY add missing APIs when instructed
+- Add a short comment block at the TOP of every file explaining its purpose
 
-FOLDER STRUCTURE:
+FOLDER STRUCTURE (MUST MATCH EXACTLY):
 backend/src/
-├── server.js              → Entry point, starts server
-├── app.js                 → Express app setup
+├── server.js
+├── app.js
 ├── config/
-│   └── db.js              → MongoDB connection logic
+│   └── db.js
 ├── models/
-│   ├── User.js            → User schema (auth)
-│   ├── Trip.js            → Trip schema
-│   ├── City.js            → City schema
-│   └── Activity.js        → Activity schema
+│   ├── User.js
+│   ├── Trip.js
+│   ├── City.js
+│   └── Activity.js
 ├── routes/
-│   ├── auth.routes.js     → Auth routes
-│   └── trip.routes.js     → Trip, City, Activity routes
+│   ├── auth.routes.js
+│   └── trip.routes.js
 ├── controllers/
 │   ├── auth.controller.js
 │   └── trip.controller.js
 ├── middleware/
-│   └── auth.middleware.js → JWT protection middleware
+│   └── auth.middleware.js
 
-DATA MODEL RULES:
-- User:
-  - name
-  - email (unique)
-  - password (hashed)
-- Trip:
-  - title
-  - description
-  - user (ObjectId ref User)
-- City:
-  - name
-  - country
-  - trip (ObjectId ref Trip)
-- Activity:
-  - name
-  - cost
-  - duration
-  - city (ObjectId ref City)
+DATA MODELS:
+User:
+- name
+- email (unique)
+- password (hashed)
+
+Trip:
+- title
+- description
+- user (ObjectId ref User)
+
+City:
+- name
+- country
+- trip (ObjectId ref Trip)
+
+Activity:
+- name
+- cost
+- duration
+- city (ObjectId ref City)
 
 AUTH RULES:
-- Signup & login using JWT
-- Password hashing using bcrypt
-- Protect all trip routes
-- Use Authorization: Bearer <token>
+- JWT-based authentication
+- bcrypt password hashing
+- Protect all trip-related routes
+- Expect token in header:
+  Authorization: Bearer <token>
 
-API ENDPOINTS:
+REQUIRED API ENDPOINTS (COMPLETE LIST):
+
+AUTH:
 - POST /api/auth/register
 - POST /api/auth/login
-- POST /api/trips
-- POST /api/trips/:tripId/cities
-- POST /api/cities/:cityId/activities
-- GET /api/trips/:tripId
+
+TRIPS:
+- POST /api/trips              → Create a new trip (protected)
+- GET  /api/trips              → Get ALL trips of logged-in user (protected)
+- GET  /api/trips/:tripId      → Get single trip with cities & activities (protected)
+
+CITIES:
+- POST /api/trips/:tripId/cities   → Add city to a trip (protected)
+
+ACTIVITIES:
+- POST /api/cities/:cityId/activities → Add activity to a city (protected)
 
 IMPORTANT:
+- DO NOT remove or modify existing routes
+- DO NOT refactor controllers unless required for new API
+- When adding GET /api/trips:
+  - Fetch only trips belonging to req.user.id
+  - Sort by createdAt (latest first)
+  - Return JSON:
+    {
+      message: "Trips fetched successfully",
+      trips: [...]
+    }
+
+FILE GENERATION RULES:
+- When I open a file and write a task comment, generate ONLY that file’s code
 - Do NOT generate frontend code
-- Do NOT generate fake data
-- Code must RUN without modification
+- Do NOT generate test files
+- Do NOT generate sample data
+- Keep changes minimal and safe

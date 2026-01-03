@@ -7,6 +7,21 @@ const Trip = require('../models/Trip');
 const City = require('../models/City');
 const Activity = require('../models/Activity');
 
+const getAllTrips = async (req, res) => {
+  try {
+    const userId = req.userId;
+
+    const trips = await Trip.find({ user: userId }).sort({ createdAt: -1 });
+
+    res.status(200).json({
+      message: 'Trips fetched successfully',
+      trips,
+    });
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+};
+
 const createTrip = async (req, res) => {
   try {
     const { title, description } = req.body;
@@ -102,4 +117,4 @@ const createActivity = async (req, res) => {
   }
 };
 
-module.exports = { createTrip, getTrip, createCity, createActivity };
+module.exports = { getAllTrips, createTrip, getTrip, createCity, createActivity };
