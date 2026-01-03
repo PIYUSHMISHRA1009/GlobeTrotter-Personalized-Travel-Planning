@@ -14,12 +14,15 @@ const register = async (req, res) => {
       return res.status(400).json({ message: 'All fields required' });
     }
 
-    const existingUser = await User.findOne({ email });
+    // Normalize email to lowercase for consistent lookup
+    const normalizedEmail = email.toLowerCase();
+
+    const existingUser = await User.findOne({ email: normalizedEmail });
     if (existingUser) {
       return res.status(400).json({ message: 'Email already registered' });
     }
 
-    const user = new User({ name, email, password });
+    const user = new User({ name, email: normalizedEmail, password });
     await user.save();
 
     const token = jwt.sign({ userId: user._id }, 'globetrotter_secret_key', {
@@ -44,7 +47,10 @@ const login = async (req, res) => {
       return res.status(400).json({ message: 'Email and password required' });
     }
 
-    const user = await User.findOne({ email });
+    // Normalize email to lowercase for consistent lookup
+    const normalizedEmail = email.toLowerCase();
+
+    const user = await User.findOne({ email: normalizedEmail });
     if (!user) {
       return res.status(401).json({ message: 'Invalid credentials' });
     }
