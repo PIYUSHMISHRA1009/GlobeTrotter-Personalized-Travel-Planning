@@ -5,8 +5,6 @@
 
 import React, { useState } from 'react';
 import Layout from '../components/Layout';
-import { Card } from '../components/Card';
-import { Button } from '../components/Button';
 
 export default function Calendar() {
   const [currentDate, setCurrentDate] = useState(new Date(2024, 0, 1));
@@ -71,96 +69,111 @@ export default function Calendar() {
 
   return (
     <Layout>
-      <div>
-        <h1 className="text-3xl font-bold text-gray-900 mb-2">Trip Calendar</h1>
-        <p className="text-gray-500 mb-8">View your trip schedule and daily activities</p>
+      {/* Header */}
+      <div className="flex items-center justify-between mb-8">
+        <div>
+          <h1 className="text-2xl font-semibold text-gray-900">Trip calendar</h1>
+          <p className="text-gray-500 text-sm mt-1">View your trip schedule and daily activities</p>
+        </div>
+      </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          <div className="lg:col-span-2">
-            <Card className="p-6">
-              <div className="flex justify-between items-center mb-6">
-                <Button onClick={handlePrevMonth} variant="secondary" size="sm">
-                  ← Previous
-                </Button>
-                <h2 className="text-xl font-bold text-gray-800">{monthName}</h2>
-                <Button onClick={handleNextMonth} variant="secondary" size="sm">
-                  Next →
-                </Button>
-              </div>
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        {/* Calendar */}
+        <div className="lg:col-span-2">
+          <div className="bg-white border border-gray-200 rounded-2xl p-6">
+            <div className="flex justify-between items-center mb-6">
+              <button 
+                onClick={handlePrevMonth}
+                className="p-2 hover:bg-gray-100 rounded-full transition-colors"
+              >
+                <svg className="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
+                </svg>
+              </button>
+              <h2 className="text-lg font-semibold text-gray-900">{monthName}</h2>
+              <button 
+                onClick={handleNextMonth}
+                className="p-2 hover:bg-gray-100 rounded-full transition-colors"
+              >
+                <svg className="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+                </svg>
+              </button>
+            </div>
 
-              <div className="grid grid-cols-7 gap-2 mb-4">
-                {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map((day) => (
-                  <div key={day} className="text-center text-sm font-semibold text-gray-600 py-2">
-                    {day}
+            <div className="grid grid-cols-7 gap-1 mb-2">
+              {['S', 'M', 'T', 'W', 'T', 'F', 'S'].map((day, idx) => (
+                <div key={idx} className="text-center text-xs font-medium text-gray-500 py-2">
+                  {day}
+                </div>
+              ))}
+            </div>
+
+            <div className="grid grid-cols-7 gap-1">
+              {days.map((day, idx) => {
+                const dateKey = day ? getDateKey(day) : null;
+                const hasEvents = dateKey && mockEvents[dateKey];
+
+                return (
+                  <div 
+                    key={idx} 
+                    className={`aspect-square flex flex-col items-center justify-center rounded-full cursor-pointer transition-colors
+                      ${day ? 'hover:bg-gray-100' : ''}
+                      ${hasEvents ? 'bg-[#FF385C] text-white hover:bg-[#E31C5F]' : ''}
+                    `}
+                  >
+                    {day && (
+                      <span className={`text-sm font-medium ${hasEvents ? 'text-white' : 'text-gray-900'}`}>
+                        {day}
+                      </span>
+                    )}
                   </div>
-                ))}
-              </div>
-
-              <div className="grid grid-cols-7 gap-2">
-                {days.map((day, idx) => {
-                  const dateKey = day ? getDateKey(day) : null;
-                  const hasEvents = dateKey && mockEvents[dateKey];
-                  const baseClasses = 'aspect-square p-2 rounded-lg text-center';
-                  const dayClasses = day
-                    ? hasEvents
-                      ? 'bg-blue-50 border-2 border-blue-200 cursor-pointer hover:bg-blue-100'
-                      : 'bg-white border border-gray-200 hover:bg-gray-50'
-                    : '';
-
-                  return (
-                    <div key={idx} className={`${baseClasses} ${dayClasses}`}>
-                      {day && (
-                        <>
-                          <div className="text-sm font-medium text-gray-800">{day}</div>
-                          {hasEvents && (
-                            <div className="text-xs text-blue-600 mt-1">
-                              • {mockEvents[dateKey].length}
-                            </div>
-                          )}
-                        </>
-                      )}
-                    </div>
-                  );
-                })}
-              </div>
-            </Card>
+                );
+              })}
+            </div>
           </div>
+        </div>
 
-          <div className="lg:col-span-1">
-            <Card className="p-6">
-              <h3 className="text-lg font-bold text-gray-900 mb-4">Upcoming Activities</h3>
-              <div className="space-y-4">
-                {Object.entries(mockEvents).map(([date, events]) => (
-                  <div key={date}>
-                    <p className="text-sm font-semibold text-gray-700 mb-2">
-                      {new Date(date).toLocaleDateString('en-US', {
-                        month: 'short',
-                        day: 'numeric',
-                      })}
-                    </p>
-                    <div className="space-y-2">
-                      {events.map((event, idx) => (
-                        <div key={idx} className="p-3 bg-gray-50 rounded-lg border border-gray-100">
-                          <div className="flex justify-between items-start">
-                            <div>
-                              <p className="text-sm font-medium text-gray-800">
-                                {event.activity}
-                              </p>
-                              <p className="text-xs text-gray-500 mt-1">{event.time}</p>
-                            </div>
-                            {event.cost > 0 && (
-                              <span className="text-sm font-semibold text-blue-600">
-                                ${event.cost}
-                              </span>
-                            )}
-                          </div>
+        {/* Sidebar - Upcoming Activities */}
+        <div className="lg:col-span-1">
+          <div className="bg-white border border-gray-200 rounded-2xl p-6">
+            <h3 className="text-lg font-semibold text-gray-900 mb-6">Upcoming</h3>
+            <div className="space-y-6">
+              {Object.entries(mockEvents).map(([date, events]) => (
+                <div key={date}>
+                  <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-3">
+                    {new Date(date).toLocaleDateString('en-US', {
+                      weekday: 'short',
+                      month: 'short',
+                      day: 'numeric',
+                    })}
+                  </p>
+                  <div className="space-y-3">
+                    {events.map((event, idx) => (
+                      <div 
+                        key={idx} 
+                        className="flex items-center gap-3 p-3 rounded-xl bg-gray-50 hover:bg-gray-100 transition-colors cursor-pointer"
+                      >
+                        <div className="w-10 h-10 rounded-lg bg-rose-100 flex items-center justify-center flex-shrink-0">
+                          <span className="text-sm">📍</span>
                         </div>
-                      ))}
-                    </div>
+                        <div className="flex-1 min-w-0">
+                          <p className="text-sm font-medium text-gray-900 truncate">
+                            {event.activity}
+                          </p>
+                          <p className="text-xs text-gray-500">{event.time}</p>
+                        </div>
+                        {event.cost > 0 && (
+                          <span className="text-sm font-semibold text-gray-900">
+                            ${event.cost}
+                          </span>
+                        )}
+                      </div>
+                    ))}
                   </div>
-                ))}
-              </div>
-            </Card>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </div>

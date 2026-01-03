@@ -1,16 +1,14 @@
 /*
  * FILE: components/Card.jsx
- * PURPOSE: Reusable card component for consistent card-based UI
- * DESIGN: Inspired by Airbnb/Booking.com card patterns
+ * PURPOSE: Reusable card component - Airbnb style
  */
 
 import React from 'react';
 import { Link } from 'react-router-dom';
 
 export function Card({ children, className = '', hover = true }) {
-  const hoverClass = hover ? 'hover:shadow-lg transition-shadow duration-200' : '';
   return (
-    <div className={`bg-white rounded-lg shadow ${hoverClass} ${className}`}>
+    <div className={`bg-white rounded-xl ${className}`}>
       {children}
     </div>
   );
@@ -20,7 +18,7 @@ export function CardLink({ to, children, className = '' }) {
   return (
     <Link
       to={to}
-      className={`block bg-white rounded-lg shadow hover:shadow-lg transition-shadow duration-200 ${className}`}
+      className={`block bg-white rounded-xl group ${className}`}
     >
       {children}
     </Link>
@@ -29,86 +27,93 @@ export function CardLink({ to, children, className = '' }) {
 
 export function TripCard({ trip, onClick }) {
   return (
-    <Card hover className="p-6 cursor-pointer" onClick={onClick}>
-      <h3 className="text-xl font-semibold text-gray-800 mb-2">
-        {trip.title}
-      </h3>
-      <p className="text-gray-600 text-sm mb-4 line-clamp-2">
-        {trip.description}
-      </p>
-      <div className="flex items-center justify-between text-xs text-gray-500">
-        <span>Created {new Date(trip.createdAt).toLocaleDateString()}</span>
-        <span className="text-blue-600 font-medium">View Details →</span>
+    <div 
+      onClick={onClick}
+      className="cursor-pointer group"
+    >
+      {/* Image placeholder with gradient */}
+      <div className="relative aspect-square rounded-xl overflow-hidden mb-3 bg-gradient-to-br from-rose-100 via-pink-50 to-rose-200">
+        <div className="absolute inset-0 flex items-center justify-center">
+          <span className="text-6xl opacity-50">🗺️</span>
+        </div>
+        {/* Favorite button */}
+        <button className="absolute top-3 right-3 p-2 hover:scale-110 transition-transform">
+          <svg className="w-6 h-6 text-white drop-shadow-lg" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" />
+          </svg>
+        </button>
       </div>
-    </Card>
+      
+      {/* Content */}
+      <div>
+        <div className="flex justify-between items-start">
+          <h3 className="font-semibold text-gray-900 text-[15px]">
+            {trip.title}
+          </h3>
+        </div>
+        <p className="text-gray-500 text-sm mt-0.5 line-clamp-1">
+          {trip.description}
+        </p>
+        <p className="text-gray-400 text-sm mt-1">
+          {new Date(trip.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+        </p>
+      </div>
+    </div>
   );
 }
 
 export function CityCard({ city, children }) {
   return (
-    <Card className="p-6">
-      <div className="flex justify-between items-start mb-3">
+    <div className="bg-white border border-gray-200 rounded-2xl p-6 hover:shadow-lg transition-shadow">
+      <div className="flex justify-between items-start mb-4">
         <div>
-          <h3 className="text-xl font-semibold text-gray-800">
-            {city.name}{city.country && `, ${city.country}`}
+          <h3 className="text-lg font-semibold text-gray-900">
+            {city.name}{city.country && <span className="text-gray-500 font-normal">, {city.country}</span>}
           </h3>
-          {city.duration && (
-            <p className="text-sm text-gray-500 mt-1">
-              Duration: {city.duration} days
-            </p>
-          )}
         </div>
         {children}
       </div>
-      {city.description && (
-        <p className="text-gray-600 text-sm mb-4">{city.description}</p>
-      )}
       
       {/* Activities Section */}
       {city.activities && city.activities.length > 0 && (
-        <div className="mt-4 pt-4 border-t border-gray-100">
-          <h4 className="text-sm font-semibold text-gray-700 mb-3">Activities</h4>
-          <div className="space-y-2">
-            {city.activities.map((activity) => (
-              <ActivityCard key={activity._id} activity={activity} />
-            ))}
-          </div>
+        <div className="space-y-3">
+          {city.activities.map((activity) => (
+            <ActivityCard key={activity._id} activity={activity} />
+          ))}
         </div>
       )}
-    </Card>
+    </div>
   );
 }
 
 export function ActivityCard({ activity }) {
   return (
-    <div className="bg-gray-50 rounded-lg p-4 border border-gray-100">
-      <div className="flex justify-between items-start">
-        <div className="flex-1">
-          <h4 className="font-medium text-gray-800">{activity.name}</h4>
-          {activity.description && (
-            <p className="text-sm text-gray-600 mt-1">{activity.description}</p>
-          )}
-          {activity.duration && (
-            <p className="text-xs text-gray-500 mt-1">Duration: {activity.duration}</p>
-          )}
-        </div>
-        {(activity.cost !== undefined && activity.cost > 0) && (
-          <span className="ml-4 text-blue-600 font-semibold">
-            ${activity.cost}
-          </span>
+    <div className="flex items-center gap-4 p-3 rounded-xl bg-gray-50 hover:bg-gray-100 transition-colors">
+      <div className="w-10 h-10 rounded-lg bg-rose-100 flex items-center justify-center flex-shrink-0">
+        <span className="text-lg">📍</span>
+      </div>
+      <div className="flex-1 min-w-0">
+        <h4 className="font-medium text-gray-900 text-sm">{activity.name}</h4>
+        {activity.duration && (
+          <p className="text-xs text-gray-500">{activity.duration}</p>
         )}
       </div>
+      {(activity.cost !== undefined && activity.cost > 0) && (
+        <span className="text-sm font-semibold text-gray-900">
+          ${activity.cost}
+        </span>
+      )}
     </div>
   );
 }
 
 export function EmptyState({ icon = '✨', title, message, action }) {
   return (
-    <Card className="p-12 text-center">
-      <div className="text-6xl mb-4">{icon}</div>
-      <h3 className="text-xl font-semibold text-gray-800 mb-2">{title}</h3>
-      <p className="text-gray-500 mb-6">{message}</p>
+    <div className="text-center py-16">
+      <div className="text-7xl mb-6">{icon}</div>
+      <h3 className="text-xl font-semibold text-gray-900 mb-2">{title}</h3>
+      <p className="text-gray-500 mb-8 max-w-md mx-auto">{message}</p>
       {action && action}
-    </Card>
+    </div>
   );
 }

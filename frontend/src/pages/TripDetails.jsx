@@ -7,8 +7,8 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { tripAPI } from '../utils/api';
 import Layout from '../components/Layout';
-import { Card, CityCard, ActivityCard, EmptyState } from '../components/Card';
-import { Button, ButtonLink } from '../components/Button';
+import { CityCard, EmptyState } from '../components/Card';
+import { ButtonLink } from '../components/Button';
 
 export default function TripDetails() {
   const { tripId } = useParams();
@@ -38,7 +38,13 @@ export default function TripDetails() {
   if (loading) {
     return (
       <Layout>
-        <div className="text-center text-gray-500 py-12">Loading trip details...</div>
+        <div className="max-w-4xl mx-auto">
+          <div className="animate-pulse">
+            <div className="h-8 bg-gray-200 rounded w-1/3 mb-4"></div>
+            <div className="h-4 bg-gray-200 rounded w-1/2 mb-8"></div>
+            <div className="h-32 bg-gray-200 rounded-xl"></div>
+          </div>
+        </div>
       </Layout>
     );
   }
@@ -46,11 +52,14 @@ export default function TripDetails() {
   if (error) {
     return (
       <Layout>
-        <div className="text-center py-12">
+        <div className="text-center py-16">
           <div className="text-red-600 mb-4">{error}</div>
-          <Button onClick={() => navigate('/dashboard')} variant="primary">
+          <button 
+            onClick={() => navigate('/dashboard')} 
+            className="px-6 py-3 bg-[#FF385C] text-white rounded-xl font-medium hover:bg-[#E31C5F]"
+          >
             Back to Dashboard
-          </Button>
+          </button>
         </div>
       </Layout>
     );
@@ -64,64 +73,84 @@ export default function TripDetails() {
     return sum + cityCost;
   }, 0);
 
+  const totalActivities = cities.reduce((sum, city) => sum + (city.activities?.length || 0), 0);
+
   return (
     <Layout>
-      {/* Trip Header */}
-      <div className="mb-8">
-        <div className="flex justify-between items-start mb-4">
-          <div>
-            <h1 className="text-4xl font-bold text-gray-900 mb-2">{trip.title}</h1>
-            <p className="text-gray-600 text-lg">{trip.description}</p>
-          </div>
-          <Button onClick={() => navigate('/dashboard')} variant="secondary">
-            ← Back
-          </Button>
-        </div>
-        
-        <Card className="p-6 bg-blue-50 border border-blue-100">
-          <div className="flex justify-between items-center">
-            <div>
-              <p className="text-sm text-gray-600 mb-1">Total Budget</p>
-              <p className="text-3xl font-bold text-blue-600">${totalCost}</p>
-            </div>
-            <div className="text-right">
-              <p className="text-sm text-gray-600 mb-1">Cities</p>
-              <p className="text-2xl font-semibold text-gray-800">{cities.length}</p>
-            </div>
-          </div>
-        </Card>
-      </div>
+      <div className="max-w-4xl mx-auto">
+        {/* Back Button */}
+        <button 
+          onClick={() => navigate('/dashboard')}
+          className="flex items-center gap-2 text-gray-600 hover:text-gray-900 mb-6"
+        >
+          <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
+          </svg>
+          Back to trips
+        </button>
 
-      {/* Cities Section */}
-      <div>
-        <div className="flex justify-between items-center mb-6">
-          <h2 className="text-2xl font-bold text-gray-900">Itinerary</h2>
-          <ButtonLink to={`/trip/${tripId}/add-city`}>
-            + Add City
-          </ButtonLink>
+        {/* Trip Header */}
+        <div className="mb-8">
+          <h1 className="text-3xl font-semibold text-gray-900 mb-2">{trip.title}</h1>
+          <p className="text-gray-500">{trip.description}</p>
         </div>
 
-        {cities.length === 0 ? (
-          <EmptyState
-            icon="🏙️"
-            title="No cities added yet"
-            message="Start building your itinerary by adding your first destination!"
-            action={<ButtonLink to={`/trip/${tripId}/add-city`} size="lg">Add Your First City</ButtonLink>}
-          />
-        ) : (
-          <div className="space-y-6">
-            {cities.map((city, index) => (
-              <CityCard key={city._id} city={city}>
-                <Link
-                  to={`/city/${city._id}/add-activity`}
-                  className="text-sm text-blue-600 hover:text-blue-700 font-medium"
-                >
-                  + Add Activity
-                </Link>
-              </CityCard>
-            ))}
+        {/* Stats Cards */}
+        <div className="grid grid-cols-3 gap-4 mb-8">
+          <div className="bg-gray-50 rounded-2xl p-5">
+            <p className="text-sm text-gray-500 mb-1">Cities</p>
+            <p className="text-2xl font-semibold text-gray-900">{cities.length}</p>
           </div>
-        )}
+          <div className="bg-gray-50 rounded-2xl p-5">
+            <p className="text-sm text-gray-500 mb-1">Activities</p>
+            <p className="text-2xl font-semibold text-gray-900">{totalActivities}</p>
+          </div>
+          <div className="bg-gray-50 rounded-2xl p-5">
+            <p className="text-sm text-gray-500 mb-1">Total cost</p>
+            <p className="text-2xl font-semibold text-gray-900">${totalCost}</p>
+          </div>
+        </div>
+
+        {/* Divider */}
+        <hr className="border-gray-200 mb-8" />
+
+        {/* Cities Section */}
+        <div>
+          <div className="flex justify-between items-center mb-6">
+            <h2 className="text-xl font-semibold text-gray-900">Itinerary</h2>
+            <Link
+              to={`/trip/${tripId}/add-city`}
+              className="flex items-center gap-1 text-sm font-medium text-gray-900 hover:underline"
+            >
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
+              </svg>
+              Add city
+            </Link>
+          </div>
+
+          {cities.length === 0 ? (
+            <EmptyState
+              icon="🏙️"
+              title="No cities added yet"
+              message="Start building your itinerary by adding your first destination!"
+              action={<ButtonLink to={`/trip/${tripId}/add-city`} size="lg">Add Your First City</ButtonLink>}
+            />
+          ) : (
+            <div className="space-y-4">
+              {cities.map((city, index) => (
+                <CityCard key={city._id} city={city}>
+                  <Link
+                    to={`/city/${city._id}/add-activity`}
+                    className="text-sm text-[#FF385C] hover:underline font-medium"
+                  >
+                    + Add activity
+                  </Link>
+                </CityCard>
+              ))}
+            </div>
+          )}
+        </div>
       </div>
     </Layout>
   );

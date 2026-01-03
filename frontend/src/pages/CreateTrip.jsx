@@ -7,8 +7,6 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { tripAPI } from '../utils/api';
 import Layout from '../components/Layout';
-import { Card } from '../components/Card';
-import { Button } from '../components/Button';
 
 export default function CreateTrip() {
   const [title, setTitle] = useState('');
@@ -35,66 +33,75 @@ export default function CreateTrip() {
   return (
     <Layout>
       <div className="max-w-2xl mx-auto">
-        <h1 className="text-3xl font-bold text-gray-900 mb-2">Create New Trip</h1>
-        <p className="text-gray-500 mb-8">Start planning your next adventure</p>
+        {/* Header */}
+        <div className="mb-8">
+          <button 
+            onClick={() => navigate('/dashboard')}
+            className="flex items-center gap-2 text-gray-600 hover:text-gray-900 mb-4"
+          >
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
+            </svg>
+            Back
+          </button>
+          <h1 className="text-3xl font-semibold text-gray-900">Create a new trip</h1>
+        </div>
 
         {error && (
-          <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-6">
+          <div className="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-xl mb-6 text-sm">
             {error}
           </div>
         )}
 
-        <Card className="p-8">
-          <form onSubmit={handleCreateTrip}>
-            <div className="mb-6">
-              <label className="block text-gray-700 font-semibold mb-2">
-                Trip Title
+        <form onSubmit={handleCreateTrip}>
+          <div className="space-y-6">
+            <div>
+              <label className="block text-sm font-medium text-gray-900 mb-2">
+                Trip title
               </label>
               <input
                 type="text"
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                placeholder="e.g., European Adventure"
+                className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent text-base"
+                placeholder="e.g., Summer in Europe"
                 required
               />
             </div>
 
-            <div className="mb-8">
-              <label className="block text-gray-700 font-semibold mb-2">
-                Trip Description
+            <div>
+              <label className="block text-sm font-medium text-gray-900 mb-2">
+                Description
               </label>
               <textarea
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent h-32 resize-none"
-                placeholder="Describe your trip..."
+                className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent text-base h-32 resize-none"
+                placeholder="Tell us about your trip..."
                 required
               />
             </div>
+          </div>
 
-            <div className="flex gap-4">
-              <Button
-                type="submit"
-                disabled={loading}
-                variant="primary"
-                size="lg"
-                className="flex-1"
-              >
-                {loading ? 'Creating...' : 'Create Trip'}
-              </Button>
-              <Button
-                type="button"
-                onClick={() => navigate('/dashboard')}
-                variant="secondary"
-                size="lg"
-                className="flex-1"
-              >
-                Cancel
-              </Button>
-            </div>
-          </form>
-        </Card>
+          <hr className="my-8 border-gray-200" />
+
+          <div className="flex gap-4">
+            <button
+              type="button"
+              onClick={() => navigate('/dashboard')}
+              className="flex-1 py-3 px-6 border border-gray-900 rounded-xl text-gray-900 font-medium hover:bg-gray-50 transition-colors"
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              disabled={loading}
+              className="flex-1 py-3 px-6 bg-[#FF385C] text-white rounded-xl font-medium hover:bg-[#E31C5F] disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors"
+            >
+              {loading ? 'Creating...' : 'Create trip'}
+            </button>
+          </div>
+        </form>
       </div>
     </Layout>
   );

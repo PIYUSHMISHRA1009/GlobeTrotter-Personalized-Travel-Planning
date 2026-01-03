@@ -34,25 +34,30 @@ export default function Dashboard() {
 
   return (
     <Layout>
-      {/* Page Header */}
-      <div className="flex justify-between items-center mb-8">
-        <div>
-          <h1 className="text-3xl font-bold text-gray-900">My Trips</h1>
-          <p className="text-gray-500 mt-1">Plan, organize, and explore your journeys</p>
+      {/* Section Header - Airbnb style */}
+      <div className="flex items-center justify-between mb-6">
+        <div className="flex items-center gap-2">
+          <h1 className="text-2xl font-semibold text-gray-900">Your trips</h1>
+          <span className="text-gray-400">→</span>
         </div>
-        <ButtonLink to="/create-trip" size="lg">
-          + Create New Trip
-        </ButtonLink>
       </div>
 
       {error && (
-        <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-6">
+        <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-xl mb-6 text-sm">
           {error}
         </div>
       )}
 
       {loading ? (
-        <div className="text-center text-gray-500 py-12">Loading your trips...</div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
+          {[...Array(5)].map((_, i) => (
+            <div key={i} className="animate-pulse">
+              <div className="aspect-square bg-gray-200 rounded-xl mb-3"></div>
+              <div className="h-4 bg-gray-200 rounded w-3/4 mb-2"></div>
+              <div className="h-3 bg-gray-200 rounded w-1/2"></div>
+            </div>
+          ))}
+        </div>
       ) : trips.length === 0 ? (
         <EmptyState
           icon="✈️"
@@ -61,7 +66,7 @@ export default function Dashboard() {
           action={<ButtonLink to="/create-trip" size="lg">Create Your First Trip</ButtonLink>}
         />
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
           {trips.map((trip) => (
             <TripCard
               key={trip._id}

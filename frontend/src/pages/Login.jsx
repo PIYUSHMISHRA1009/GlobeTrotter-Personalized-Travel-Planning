@@ -34,76 +34,88 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 via-white to-blue-50">
-      <div className="w-full max-w-md px-6">
-        {/* Logo & Header */}
-        <div className="text-center mb-8">
-          <div className="flex items-center justify-center mb-4">
-            <span className="text-5xl">🌍</span>
+    <div className="min-h-screen flex items-center justify-center bg-white">
+      <div className="w-full max-w-[568px] px-6">
+        {/* Modal Card */}
+        <div className="border border-gray-200 rounded-xl shadow-xl overflow-hidden">
+          {/* Header */}
+          <div className="border-b border-gray-200 p-6 text-center">
+            <h1 className="text-lg font-semibold text-gray-900">Log in or sign up</h1>
           </div>
-          <h1 className="text-4xl font-bold text-gray-900 mb-2">GlobeTrotter</h1>
-          <p className="text-gray-500">Plan Your Perfect Journey</p>
-        </div>
 
-        {/* Login Card */}
-        <div className="bg-white rounded-2xl shadow-xl p-8">
-          {error && (
-            <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-6 text-sm">
-              {error}
+          {/* Content */}
+          <div className="p-6">
+            <h2 className="text-xl font-semibold text-gray-900 mb-6">Welcome to GlobeTrotter</h2>
+
+            {error && (
+              <div className="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-xl mb-4 text-sm">
+                {error}
+              </div>
+            )}
+
+            <form onSubmit={handleLogin}>
+              <div className="space-y-3">
+                <div>
+                  <div className="relative">
+                    <input
+                      type="email"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      className="w-full px-4 pt-6 pb-2 border border-gray-300 rounded-t-xl focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent text-base peer"
+                      placeholder=" "
+                      required
+                    />
+                    <label className="absolute text-gray-500 text-sm left-4 top-2 peer-placeholder-shown:top-4 peer-placeholder-shown:text-base peer-focus:top-2 peer-focus:text-sm transition-all">
+                      Email
+                    </label>
+                  </div>
+                  <div className="relative">
+                    <input
+                      type="password"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      className="w-full px-4 pt-6 pb-2 border border-gray-300 border-t-0 rounded-b-xl focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent text-base peer"
+                      placeholder=" "
+                      required
+                    />
+                    <label className="absolute text-gray-500 text-sm left-4 top-2 peer-placeholder-shown:top-4 peer-placeholder-shown:text-base peer-focus:top-2 peer-focus:text-sm transition-all">
+                      Password
+                    </label>
+                  </div>
+                </div>
+              </div>
+
+              <button
+                type="submit"
+                disabled={loading}
+                className="w-full mt-4 bg-[#FF385C] text-white font-medium py-3.5 rounded-xl hover:bg-[#E31C5F] disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors text-base"
+              >
+                {loading ? 'Logging in...' : 'Continue'}
+              </button>
+            </form>
+
+            <div className="flex items-center my-5">
+              <div className="flex-1 border-t border-gray-300"></div>
+              <span className="px-4 text-xs text-gray-500">or</span>
+              <div className="flex-1 border-t border-gray-300"></div>
             </div>
-          )}
 
-          <form onSubmit={handleLogin}>
-            <div className="mb-5">
-              <label className="block text-gray-700 font-semibold mb-2 text-sm">
-                Email Address
-              </label>
-              <input
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
-                placeholder="Enter your email"
-                required
-              />
-            </div>
-
-            <div className="mb-6">
-              <label className="block text-gray-700 font-semibold mb-2 text-sm">
-                Password
-              </label>
-              <input
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
-                placeholder="Enter your password"
-                required
-              />
-            </div>
-
-            <button
-              type="submit"
-              disabled={loading}
-              className="w-full bg-blue-600 text-white font-semibold py-3 rounded-lg hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition duration-200 shadow-lg shadow-blue-200"
+            <Link
+              to="/register"
+              className="block w-full py-3.5 px-4 border border-gray-900 rounded-xl text-center font-medium text-gray-900 hover:bg-gray-50 transition-colors"
             >
-              {loading ? 'Logging in...' : 'Login'}
-            </button>
-          </form>
-
-          <div className="mt-6 text-center">
-            <p className="text-gray-600 text-sm">
-              Don't have an account?{' '}
-              <Link to="/register" className="text-blue-600 font-semibold hover:text-blue-700">
-                Create one here
-              </Link>
-            </p>
+              Sign up
+            </Link>
           </div>
         </div>
 
-        <p className="text-center text-gray-400 text-xs mt-8">
-          © 2024 GlobeTrotter. Explore the world with confidence.
-        </p>
+        {/* Logo */}
+        <div className="flex items-center justify-center mt-8 gap-2">
+          <svg viewBox="0 0 32 32" className="h-8 w-8 text-[#FF385C]" fill="currentColor">
+            <path d="M16 1c2.008 0 3.463.963 4.751 3.269l.533 1.025c1.954 3.83 6.114 12.54 7.1 14.836l.145.353c.667 1.591.91 2.472.96 3.396l.01.415.001.228c0 4.062-2.877 6.478-6.357 6.478-2.224 0-4.556-1.258-6.709-3.386l-.257-.26-.172-.179h-.054l-.1.092c-2.146 2.09-4.398 3.733-6.639 3.733-3.48 0-6.357-2.416-6.357-6.478 0-1.357.333-2.614 1.116-4.392l.109-.246c.96-2.176 5.096-10.742 7.1-14.836l.533-1.025C10.537 1.963 11.992 1 14 1h2zm0 2h-2c-.82 0-1.6.39-2.697 2.156l-.393.698c-1.89 3.701-5.936 12.068-6.9 14.308l-.137.31c-.702 1.585-.885 2.376-.885 3.506 0 2.643 1.744 4.022 3.857 4.022 1.527 0 3.283-1.027 5.15-2.89l.584-.592.569.576c1.855 1.857 3.556 2.906 5.086 2.906 2.113 0 3.857-1.379 3.857-4.022 0-1.13-.183-1.921-.885-3.506l-.137-.31c-.964-2.24-5.01-10.607-6.9-14.308l-.393-.698C17.6 3.39 16.82 3 16 3z"/>
+          </svg>
+          <span className="text-[#FF385C] font-semibold text-lg">GlobeTrotter</span>
+        </div>
       </div>
     </div>
   );

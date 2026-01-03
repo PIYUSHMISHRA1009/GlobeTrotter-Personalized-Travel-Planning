@@ -7,8 +7,6 @@ import React, { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { tripAPI } from '../utils/api';
 import Layout from '../components/Layout';
-import { Card } from '../components/Card';
-import { Button } from '../components/Button';
 
 export default function AddActivity() {
   const { cityId, tripId } = useParams();
@@ -37,82 +35,93 @@ export default function AddActivity() {
   return (
     <Layout>
       <div className="max-w-2xl mx-auto">
-        <h1 className="text-3xl font-bold text-gray-900 mb-2">Add Activity</h1>
-        <p className="text-gray-500 mb-8">Add an activity to your city itinerary</p>
+        {/* Header */}
+        <div className="mb-8">
+          <button 
+            onClick={() => navigate(`/trip/${tripId}`)}
+            className="flex items-center gap-2 text-gray-600 hover:text-gray-900 mb-4"
+          >
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
+            </svg>
+            Back
+          </button>
+          <h1 className="text-3xl font-semibold text-gray-900">Add an activity</h1>
+        </div>
 
         {error && (
-          <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-6">
+          <div className="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-xl mb-6 text-sm">
             {error}
           </div>
         )}
 
-        <Card className="p-8">
-          <form onSubmit={handleAddActivity}>
-            <div className="mb-6">
-              <label className="block text-gray-700 font-semibold mb-2">
-                Activity Name
+        <form onSubmit={handleAddActivity}>
+          <div className="space-y-6">
+            <div>
+              <label className="block text-sm font-medium text-gray-900 mb-2">
+                Activity name
               </label>
               <input
                 type="text"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent text-base"
                 placeholder="e.g., Eiffel Tower Visit"
                 required
               />
             </div>
 
-            <div className="mb-6">
-              <label className="block text-gray-700 font-semibold mb-2">
-                Cost ($)
-              </label>
-              <input
-                type="number"
-                value={cost}
-                onChange={(e) => setCost(e.target.value)}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                placeholder="e.g., 25"
-                step="0.01"
-                required
-              />
-            </div>
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-900 mb-2">
+                  Cost ($)
+                </label>
+                <input
+                  type="number"
+                  value={cost}
+                  onChange={(e) => setCost(e.target.value)}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent text-base"
+                  placeholder="25"
+                  step="0.01"
+                  required
+                />
+              </div>
 
-            <div className="mb-8">
-              <label className="block text-gray-700 font-semibold mb-2">
-                Duration
-              </label>
-              <input
-                type="text"
-                value={duration}
-                onChange={(e) => setDuration(e.target.value)}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                placeholder="e.g., 2 hours"
-                required
-              />
+              <div>
+                <label className="block text-sm font-medium text-gray-900 mb-2">
+                  Duration
+                </label>
+                <input
+                  type="text"
+                  value={duration}
+                  onChange={(e) => setDuration(e.target.value)}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent text-base"
+                  placeholder="2 hours"
+                  required
+                />
+              </div>
             </div>
+          </div>
 
-            <div className="flex gap-4">
-              <Button
-                type="submit"
-                disabled={loading}
-                variant="primary"
-                size="lg"
-                className="flex-1"
-              >
-                {loading ? 'Adding...' : 'Add Activity'}
-              </Button>
-              <Button
-                type="button"
-                onClick={() => navigate(`/trip/${tripId}`)}
-                variant="secondary"
-                size="lg"
-                className="flex-1"
-              >
-                Cancel
-              </Button>
-            </div>
-          </form>
-        </Card>
+          <hr className="my-8 border-gray-200" />
+
+          <div className="flex gap-4">
+            <button
+              type="button"
+              onClick={() => navigate(`/trip/${tripId}`)}
+              className="flex-1 py-3 px-6 border border-gray-900 rounded-xl text-gray-900 font-medium hover:bg-gray-50 transition-colors"
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              disabled={loading}
+              className="flex-1 py-3 px-6 bg-[#FF385C] text-white rounded-xl font-medium hover:bg-[#E31C5F] disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors"
+            >
+              {loading ? 'Adding...' : 'Add activity'}
+            </button>
+          </div>
+        </form>
       </div>
     </Layout>
   );
