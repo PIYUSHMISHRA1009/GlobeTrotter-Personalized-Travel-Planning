@@ -4,7 +4,8 @@
  */
 
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import Layout from '../components/Layout';
+import { Card } from '../components/Card';
 
 export default function Search() {
   const [searchTerm, setSearchTerm] = useState('');
@@ -50,45 +51,35 @@ export default function Search() {
   );
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="max-w-6xl mx-auto px-4 py-8">
-        <div className="flex justify-between items-center mb-8">
-          <h1 className="text-3xl font-bold text-gray-800">Discover Cities</h1>
-          <Link
-            to="/dashboard"
-            className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-          >
-            Back to Dashboard
-          </Link>
-        </div>
+    <Layout>
+      <div>
+        <h1 className="text-3xl font-bold text-gray-900 mb-2">Explore Destinations</h1>
+        <p className="text-gray-500 mb-8">Discover cities and popular activities around the world</p>
 
         {/* Search Bar */}
-        <div className="bg-white rounded-lg shadow p-6 mb-8">
+        <Card className="p-6 mb-8">
           <input
             type="text"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             placeholder="Search by city or country..."
           />
-        </div>
+        </Card>
 
         {/* Results */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredCities.length === 0 ? (
-            <div className="col-span-2 text-center text-gray-500 py-12">
+            <div className="col-span-full text-center text-gray-500 py-12">
               No cities found. Try a different search.
             </div>
           ) : (
             filteredCities.map((city) => (
-              <div
-                key={city.id}
-                className="bg-white rounded-lg shadow p-6 hover:shadow-lg transition"
-              >
-                <h3 className="text-xl font-bold text-gray-800 mb-2">
+              <Card key={city.id} className="p-6">
+                <h3 className="text-xl font-bold text-gray-800 mb-1">
                   {city.name}
                 </h3>
-                <p className="text-gray-600 mb-4">{city.country}</p>
+                <p className="text-gray-500 text-sm mb-4">{city.country}</p>
                 <div>
                   <p className="text-sm font-semibold text-gray-700 mb-2">
                     Popular Activities:
@@ -99,11 +90,11 @@ export default function Search() {
                     ))}
                   </ul>
                 </div>
-              </div>
+              </Card>
             ))
           )}
         </div>
       </div>
-    </div>
+    </Layout>
   );
 }
